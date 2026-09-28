@@ -91,4 +91,3 @@ class TmdbException implements Exception {
   @override
   String toString() => message;
 }
-

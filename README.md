@@ -1,29 +1,40 @@
 # MoviesApp
 
-MoviesApp is a Flutter graduation project for the ITI Flutter track. It lets users browse movies, search TMDB, and organize movies into lists.
+A Flutter movie application for the ITI graduation project. Users can browse and search movies, view movie details, and save movies in personal lists.
 
 ## Features
 
-- Email/password registration, login, and logout with Firebase Authentication.
-- Popular, Now Playing, Top Rated, and Upcoming movies.
-- Movie search and details.
-- Favorites, Watched, Watching, and Want to Watch lists.
-- SQLite storage for each signed-in user's lists.
+- Register, log in, and log out with Firebase Authentication.
+- Browse Popular, Now Playing, Top Rated, and Upcoming movies from TMDB.
+- Search movies and view their details.
+- Add and remove movies from Favorites, Watched, Watching, and Want to Watch.
+- Save lists in SQLite so they remain after the app restarts.
 
 ## Technologies
 
-Flutter, Provider, TMDB API, Firebase Authentication, and SQLite (`sqflite`).
+Flutter and Dart, Provider, TMDB API, Firebase Authentication, and SQLite (`sqflite`).
 
-## Project structure
+## Architecture and state management
 
-- `screens/` and `widgets/`: app pages and reusable UI.
-- `providers/`: shared app state and actions.
-- `services/`: TMDB, Firebase Authentication, and SQLite.
-- `models/`: movie data and list types.
+The app uses a simple Provider and service structure. Provider was chosen because it is easy to follow for this app's size. Screens display data and call providers; providers manage loading, results, errors, and saved-list state; services handle TMDB, Firebase Authentication, and SQLite. Movie responses are converted into the `Movie` model before they reach the screens.
 
-Provider connects the screens to the services, keeping the project small and easy to follow.
+- `lib/screens/`: app screens.
+- `lib/widgets/`: reusable UI widgets.
+- `lib/providers/`: authentication, movie, and list state.
+- `lib/services/`: TMDB, Firebase Authentication, and database code.
+- `lib/models/`: movie and list data models.
 
-## Run the app
+## TMDB API
+
+`TmdbService` requests the Popular, Now Playing, Top Rated, and Upcoming movie lists, searches movies by title, and loads details for a selected movie. `Movie.fromJson` converts the API response into the app's movie model. The app shows loading, error, and empty-result messages.
+
+## Firebase Authentication
+
+`AuthService` uses Firebase Authentication for email/password registration, login, and logout. `AuthProvider` manages the authentication loading and error states. The app listens to Firebase's authentication state to show the login screen or the signed-in app.
+
+## Setup and run
+
+Before running, open `lib/services/tmdb_service.dart` and replace `YOUR_TMDB_API_KEY` with your TMDB API key.
 
 From the project folder, run:
 
@@ -32,8 +43,30 @@ flutter pub get
 flutter run
 ```
 
-Firebase is already configured for the project. The TMDB key and Firebase client configuration are included for this course submission, so keep the repository **private** and give the evaluator access.
+Firebase is configured for this project. Email/password sign-in must be enabled in the Firebase project.
 
 ## Database
 
-SQLite stores the four lists on the current device. Lists are separated by Firebase user ID, but do not sync between devices.
+SQLite stores the four movie lists on the device. Each saved movie is associated with the signed-in user's Firebase ID. Lists persist after restarting the app, but do not sync between devices.
+
+## Screenshots
+
+| Login | Registration | Home |
+|---|---|---|
+| <img src="screenshots/01-login.jpg" alt="Login screen" width="220"> | <img src="screenshots/02-register.jpg" alt="Registration screen" width="220"> | <img src="screenshots/03-home.jpg" alt="Home screen" width="220"> |
+
+| Home categories | Search | Movie details |
+|---|---|---|
+| <img src="screenshots/04-home-categories.jpg" alt="Home movie categories" width="220"> | <img src="screenshots/05-search.jpg" alt="Movie search" width="220"> | <img src="screenshots/06-movie-details.jpg" alt="Movie details" width="220"> |
+
+| Favorites | Watched | Watching |
+|---|---|---|
+| <img src="screenshots/07-favorites.jpg" alt="Favorites list" width="220"> | <img src="screenshots/08-watched.jpg" alt="Watched list" width="220"> | <img src="screenshots/09-watching.jpg" alt="Watching list" width="220"> |
+
+| Want to Watch | Profile | |
+|---|---|---|
+| <img src="screenshots/10-want-to-watch.jpg" alt="Want to Watch list" width="220"> | <img src="screenshots/11-profile.jpg" alt="Profile screen" width="220"> | |
+
+## Known limitation
+
+Saved lists are local to the device and do not sync to other devices.

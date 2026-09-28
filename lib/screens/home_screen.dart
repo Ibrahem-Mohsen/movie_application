@@ -34,6 +34,13 @@ class HomeScreen extends StatelessWidget {
           );
         }
 
+        if (!provider.isLoadingHome && !hasMovies) {
+          return const EmptyView(
+            title: 'No movies available',
+            message: 'Pull down to try loading movies again.',
+          );
+        }
+
         return RefreshIndicator(
           onRefresh: provider.loadHome,
           child: CustomScrollView(
